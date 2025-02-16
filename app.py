@@ -3,7 +3,7 @@ import time
 import random
 
 # 페이지 제목
-st.title("Streaming 시작")
+st.title("⚠️ 브라우저 내장 경고음 테스트")
 
 # 메시지 출력을 위한 공간 생성
 message_placeholder = st.empty()
@@ -16,14 +16,22 @@ if st.button("시작"):
     wait_time = random.randint(1, 15)
     time.sleep(wait_time)
 
-    # HTML을 사용하여 오디오 자동 재생
-    audio_html = """
-        <audio autoplay>
-            <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
-                브라우저가 오디오 태그를 지원하지 않습니다.
-        </audio>
+                    # JavaScript를 활용한 브라우저 내장 경고음
+    beep_js = """
+        <script>
+            function beep() {
+                var ctx = new (window.AudioContext || window.webkitAudioContext)();
+                var oscillator = ctx.createOscillator();
+                oscillator.type = "square";
+                oscillator.frequency.setValueAtTime(1000, ctx.currentTime); // 1000Hz 경고음
+                oscillator.connect(ctx.destination);
+                oscillator.start();
+                setTimeout(() => oscillator.stop(), 200); // 0.2초 동안 소리
+            }
+            beep();
+        </script>
     """
 
-    # 메시지 변경 및 오디오 재생
-    message_placeholder.text("🚀 시작!")
-    st.markdown(audio_html, unsafe_allow_html=True)
+# 메시지 변경 및 경고음 실행
+message_placeholder.text("🚨 경고음 발생!")
+st.markdown(beep_js, unsafe_allow_html=True)
